@@ -5,7 +5,7 @@
                 <div class="form-items">
                     <h3>Edit Category details</h3>
                     
-                    <form id="userForm" action="/admin/edit-category" method="post">
+                    <form id="categForm" action="#">
 
                         <div class="col-md-12">
                             <label for="product_name" class="form-label">Name</label>
@@ -28,7 +28,7 @@
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Description</label>
                             
-                            <textarea name="description"  placeholder="<%= category.description %>" class="form-control"    ></textarea>
+                            <textarea name="description"  class="form-control" placeholder="<%= category.description %>"  value="<%= category.description %>" rows="4" ></textarea>
                              
                         </div>
 
@@ -36,7 +36,7 @@
 
                         <div class="form-button mt-3">
 
-                            <button id="button" type="submit"  class="btn btn-primary">Submit</button>
+                            <button id="button" type="submit" onclick="editCategory()"  class="btn btn-primary">Submit</button>
                             <label id="submit-error" class=" text-danger" for="button" ></label>
                           
                             <!-- <label style="color: rgba(255, 0, 0, 0.616);" for="submit">User Already Exists</label> -->
@@ -48,4 +48,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    function editCategory(){
+        $('#categForm').submit((e)=>{
+            e.preventDefault()
+
+            $.ajax({
+                url:'/admin/category',
+                method:'put',
+                data:$('#categForm').serialize(),
+                success:(response)=>{
+                    window.location.replace('/admin/category')
+                }
+
+            })
+        })
+    }
+</script>
 

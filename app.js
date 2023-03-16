@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var expressLayouts = require('express-ejs-Layouts');
-var db = require('./config/connection');
+var db = require('./Model/connection');
 var session = require('express-session');
 
 

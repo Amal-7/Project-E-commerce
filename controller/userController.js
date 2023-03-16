@@ -1,8 +1,8 @@
-var userHelper = require('../helpers/user-helpers');
-var otp = require('../config/verfication');
+var userHelper = require('../Model/helpers/user-helpers');
+var otp = require('../Model/verfication');
 const session = require('express-session');
 const { response } = require('express');
-const { womenProducts } = require('../helpers/user-helpers');
+const { womenProducts } = require('../Model/helpers/user-helpers');
 const client = require('twilio')(otp.accountId, otp.authToken);
 
 
@@ -295,7 +295,7 @@ module.exports = {
     cartItemDlt: (req, res) => {
         let user = req.session.user
         userHelper.dltFromCart(user._id, req.params.id).then((response) => {
-            res.redirect('/cart')
+            res.json(response)
         })
     },
     checkOut:async(req,res)=>{

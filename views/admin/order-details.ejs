@@ -144,7 +144,7 @@
                                                             <h5>Status:</h5>
                                                         </dt>
                                                         <dd>
-                                                            <span class="badge rounded-pill alert-success text-success">
+                                                            <span id="status-span" class="badge rounded-pill alert-success text-success">
                                                                 <%= order[0].status %>
                                                             </span>
                                                         </dd>
@@ -160,11 +160,14 @@
                 <div class="col-lg-4">
                     <div class="box shadow-sm bg-light">
 
-                        <form action="/admin/change-status/<%= order[0]._id %>" method="post">
+                        <form action="#" id="order-status" >
                             <!-- <label class="mb-2 form-check form-check-inline" style="width: 45%;">
                                 <input class="form-check-input" checked="" value="Awaiting payment" name="status" type="radio">
                                 <span class="form-check-label">Awaiting payment </span>
                             </label> -->
+
+                            <input class="d-none" value="<%= order[0]._id %>" name="id">
+
                             <% if (order[0].status=='Confirmed' ) { %>
                                 <label class="mb-2 form-check form-check-inline" style="width: 45%;">
                                     <input class="form-check-input" value="Cancelled" name="status"
@@ -215,47 +218,37 @@
                                                     <span class="form-check-label"> Delivered </span>
                                                 </label>
                                                 <% } %>
+
+
+
+
                                                 
                                             <% if(order[0].status=='Delivered' ) { %>
+                                                <div class=" ">
+                                                    <a href="" class="btn  btn-success  disabled"
+                                                        onclick="return confirm('Are you sure you want to cancel this order' )">
+                                                        Order Delivered
+                                                    </a>
+                                                </div>
                                                 
                                                                                 
                                                 
                                             <% } else if(order[0].status == 'Cancelled') { %>
+                                                <div class=" ">
+                                                    <a href="" class="btn btn-sm font-sm text-white btn-danger rounded disabled"
+                                                        onclick="return confirm('Are you sure you want to cancel this order' )">
+                                                        Order Cancelled
+                                                    </a>
+                                                </div>
                                                 
                                             <% } else { %>
-                                                <button class="btn btn-primary font-sm"> Change Status </button>
+                                                <button class="btn btn-primary font-sm" type="submit"> Change Status </button>
                                         
                                             <% } %>
                                                 
                                           
 
                         </form>
-
-                        <% if (order[0].status=='Cancelled' ) { %>
-
-                            <div class=" ">
-                                <a href="" class="btn btn-sm font-sm text-white btn-danger rounded disabled"
-                                    onclick="return confirm('Are you sure you want to cancel this order' )">
-                                    Order Cancelled
-                                </a>
-                            </div>
-
-
-
-                            <% } else if(order[0].status=='Delivered' ) { %>
-                                <div class=" ">
-                                    <a href="" class="btn  btn-success  disabled"
-                                        onclick="return confirm('Are you sure you want to cancel this order' )">
-                                        Order Delivered
-                                    </a>
-                                </div>
-
-
-                                <% } else { %>
-
-
-
-                                    <% } %>
 
                     </div>
 
@@ -264,3 +257,40 @@
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->
 </section> <!-- content-main end// -->
+
+
+<script>
+
+    $('#order-status').submit((e)=>{
+        console.log('submit');
+        e.preventDefault();
+
+   
+
+           $.ajax ({
+        
+            url:'/admin/change-status',
+            method:'post',
+            data:$('#order-status').serialize(),
+            success:(response)=>{
+                if(response.status){  
+                   
+                    document.getElementById('status-span').innerHTML = response.newStatus
+                    location.reload()
+                    
+                }else{
+                    
+                    
+                }
+            }
+        })
+        
+        
+             
+        
+        
+    })
+
+
+
+</script>

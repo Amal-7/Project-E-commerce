@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const adminController = require('../controller/adminController');
+const {adminLogin,adminCheck,adminLogout,viewUser,userStatus,viewCategory,createCategory,editCategory,deleteCategory,
+  categoryEdit,viewProducts,newProduct,addProduct,deleteProduct,
+  getProduct,editProduct,getOrders,orderDetails,changeStatus} = require('../controller/adminController');
 const multer = require('multer');
-const auth = require('../controller/authentication')
+const {admin}= require('../controller/authentication');
 
 const storage = multer.diskStorage({
   destination:(req,file,cb)=>{
@@ -19,33 +21,56 @@ const storage = multer.diskStorage({
 //multer set up
 const upload = multer({storage:storage})
 
-/* GET users listing. */
-router.get('/', adminController.adminLogin);
-router.post('/login',adminController.adminCheck);
-router.get('/logout',adminController.adminLogout);
-router.get('/view-users',adminController.viewUser);
-router.get('/user-status/:id',adminController.userStatus);
-router.get('/category',adminController.viewCategory);
-router.post('/create-category',adminController.createCategory);
-router.get('/edit-category/:id',adminController.editCategory);
-router.get('/delete-category/:id',adminController.deleteCategory);
-router.post('/edit-category',adminController.categoryEdit);
-router.get('/products',adminController.viewProducts);
-router.get('/add-product',adminController.newProduct);
-router.post('/add-product',upload.array('images',4),adminController.addProduct);
-router.get('/delete-product/:id',adminController.deleteProduct);
-router.get('/edit-product/:id',adminController.getProduct);
-router.post('/edit-product',upload.fields([
-  {name:'image0',maxCount:1},
-  {name:'image1',maxCount:1},
-  {name:'image2',maxCount:1},
-  {name:'image3',maxCount:1},
+/* admin login */
+router.route('/')
+  .get( adminLogin)
+  .post(adminCheck);
 
-]),auth.admin,adminController.editProduct);
+/* admin logout*/ 
+router.get('/logout',adminLogout);
 
-router.get('/orders',auth.admin,adminController.getOrders);
-router.get('/order-details/:id',auth.admin,adminController.orderDetails);
-router.post('/change-status/:id',auth.admin,adminController.changeStatus);
+/*view users*/ 
+router.get('/view-users',viewUser);
+router.get('/user-status/:id',userStatus);
+
+/* category details*/ 
+router.route('/category')
+  .get(viewCategory)
+  .post(createCategory)
+  .put(categoryEdit)
+  .delete(deleteCategory)
+
+/*Category edit*/ 
+router.get('/edit-category/:id',editCategory)
+ 
+/* products*/ 
+router.get('/products',viewProducts);
+
+/* add product*/ 
+router.route('/product')
+  .get(newProduct)
+  .post(upload.array('images',4),addProduct)
+  .delete(deleteProduct)
+
+/* edit product*/ 
+router.route('/edit-product/:id')
+    .get(getProduct)
+    .post(upload.fields([
+      {name:'image0',maxCount:1},
+      {name:'image1',maxCount:1},
+      {name:'image2',maxCount:1},
+      {name:'image3',maxCount:1},
+
+    ]),admin,editProduct);
+
+ /* orders*/ 
+router.get('/orders',admin,getOrders);
+
+/*single order details*/ 
+router.get('/order-details/:id',admin,orderDetails);
+
+/* order status change*/ 
+router.post('/change-status',admin,changeStatus);
 
 
 

@@ -66,7 +66,7 @@
                                         </div><!-- End .cart-product-quantity -->
                                     </td>
                                     <td  class="total-col"><span id="<%= productDetails.product._id %>-total">Rs.<%= productDetails.total %></span></td>
-                                    <td class="remove-col"><a href="/cartItemDlt/<%= productDetails.product._id %>"><button class="btn-remove"><i class="icon-close"></i></button></a></td>
+                                    <td class="remove-col"><button onclick="dltProduct('<%= productDetails.product._id %>')" class="btn-remove"><i class="icon-close"></i></button></td>
                                 </tr>
                                
                                  
@@ -181,6 +181,19 @@
 
 
     <script>
+
+        function dltProduct(productId){
+            $.ajax({
+                url:'/cartItemDlt/'+productId,
+                method:'delete',
+                success:(response)=>{
+                    if(response.removeProduct){
+                            alert("product removed from cart")
+                            location.reload()
+                }
+            }
+            })
+        }
        async function changeQty(productId,cart,total,cartTotal,value){
         
             let count =await parseInt(value)
@@ -189,14 +202,14 @@
 
                $.ajax ({
                 async:false,
-                url:'/change-product-qty',
+                url:'/cart',
                 data:{
                     cartId:cart,
                     prodId:productId,
                     count:count,
                     quantity:quantity
                 },
-                method:'post',
+                method:'patch',
                 success:async(response)=>{
                     if(response.removeProduct){
                             alert("product removed from cart")

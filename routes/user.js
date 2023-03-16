@@ -1,43 +1,87 @@
 var express = require('express');
 var router = express.Router();
-const userController = require('../controller/userController');
-const auth = require('../controller/authentication');
-const userHelpers = require('../helpers/user-helpers');
+const {home,loginPage,userLogin,userSignup,userLogout,userProfile,editProfile,logOtp,numVerify,otpVerify,
+    forgotPassword,numVerifyReset,resetOtpVerify,resetPassword,product,
+    products,addToCart,cart,changeProdQty,cartItemDlt,checkOut,placeOrder,myOrders,orderDetails,orderCancel,addAddress,newAddress,changeAddress,changeAddressTo} = require('../controller/userController');
+const {user} = require('../controller/authentication');
+
 
 
 /* GET home page. */
-router.get('/', userController.home);
-router.get('/login',userController.loginPage);
-router.post('/signup',userController.userSignup);
-router.post('/login',userController.userLogin);
-router.get('/logout',userController.userLogout);
-router.get('/my-profile',auth.user,userController.userProfile);
+router.get('/', home);
 
-router.post('/edit-profile',auth.user,userController.editProfile)
-router.get('/otp-login',userController.logOtp);
-router.post('/otp-login',userController.numVerify);
-router.post('/otp-verify',userController.otpVerify);
-router.get('/forgot-password',userController.forgotPassword);
-router.post('/forgot-password',userController.numVerifyReset);
-router.post('/forgot-otp-verify',userController.resetOtpVerify);
-router.post('/reset-password',userController.resetPassword);
+/* user login */ 
+router.route('/login')
+    .get(loginPage)
+    .post(userLogin);
 
+/* user sign up */ 
+router.post('/signup',userSignup);
 
-router.get('/products',userController.products);
-router.get('/product/:id',userController.product);
-router.get('/addToCart/:id',userController.addToCart);
-router.get('/cart',auth.user,userController.cart);
-router.post('/change-product-qty',userController.changeProdQty);
-router.get('/cartItemDlt/:id',auth.user,userController.cartItemDlt);
-router.get('/checkout',auth.user,userController.checkOut);
-router.post('/checkout',auth.user,userController.placeOrder);
-router.get('/my-orders',auth.user,userController.myOrders);
-router.get('/order-details/:id',auth.user,userController.orderDetails);
-router.get('/cancel-order/:id',auth.user,userController.orderCancel);
-router.get('/new-address',auth.user,userController.addAddress)
-router.post('/add-address',auth.user,userController.newAddress)
-router.get('/change-address',auth.user,userController.changeAddress)
-router.get('/change-address-to/:id',auth.user,userController.changeAddressTo)
+/* user logout */ 
+router.get('/logout',userLogout);
+
+/* user profile */ 
+router.get('/my-profile',user,userProfile);
+
+router.post('/edit-profile',user,editProfile)
+
+/* otp login */ 
+router.route('/otp-login')
+   .get(logOtp)
+   .post(numVerify);
+
+/* otp-verification*/    
+router.post('/otp-verify',otpVerify);
+
+/*forgot password*/ 
+router.route('/forgot-password')
+    .get(forgotPassword)
+    .post(numVerifyReset);
+
+/*otp verification forgot password*/ 
+router.post('/forgot-otp-verify',resetOtpVerify);
+
+/*reset password*/ 
+router.post('/reset-password',resetPassword);
+
+/*all products*/ 
+router.get('/products',products);
+
+/*single product */ 
+router.get('/product/:id',product);
+
+/*add to cart*/ 
+router.get('/addToCart/:id',addToCart);
+
+/* Cart Details*/ 
+router.route('/cart')
+    .get(user,cart)
+    .patch(changeProdQty);
+
+/*cart item delete*/ 
+router.delete('/cartItemDlt/:id',user,cartItemDlt);
+
+/*checkout*/ 
+router.route('/checkout')
+    .get(user,checkOut)
+    .post(user,placeOrder);
+
+/* order details*/ 
+router.get('/my-orders',user,myOrders);
+router.get('/order-details/:id',user,orderDetails);
+
+/*cancel order*/ 
+router.get('/cancel-order/:id',user,orderCancel);
+
+/* Add new address*/ 
+router.route('/new-address')
+    .get(user,addAddress)
+    .post(user,newAddress);
+
+/* changing default address*/ 
+router.get('/change-address',user,changeAddress)
+router.get('/change-address-to/:id',user,changeAddressTo)
 
 
 

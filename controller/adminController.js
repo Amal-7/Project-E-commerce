@@ -1,5 +1,5 @@
 const layout = 'admin-layout';
-const adminHelper = require('../helpers/admin-helpers');
+const adminHelper = require('../Model/helpers/admin-helpers');
 
 
 module.exports = {
@@ -82,16 +82,16 @@ module.exports = {
        }
     },
     deleteCategory:(req,res,next)=>{
-        let categId = req.params.id;
+        let categId = req.body.id;
         console.log(categId)
         adminHelper.categoryDelete(categId).then((response)=>{
-            res.redirect('/admin/category')
+            res.json({status:true})
         })
     },
     categoryEdit:(req,res,next)=>{
         let data = req.body;
         adminHelper.editCategory(data).then((response)=>{
-            res.redirect('/admin/category')
+            res.json({status:true})
         })
     },
     viewProducts:(req,res,next)=>{
@@ -142,10 +142,11 @@ module.exports = {
         }
     },
     deleteProduct:(req,res,next)=>{
+        console.log(req.body)
         let status = req.session.adminLoggedIn;
         if(status){
-            adminHelper.deleteProduct(req.params.id).then((response)=>{
-                res.redirect('/admin/products');
+            adminHelper.deleteProduct(req.body.id).then((response)=>{
+                res.json({status:true});
             })
 
         }else{
@@ -181,7 +182,7 @@ module.exports = {
     getOrders:(req,res)=>{
         let status =req.session.adminLoggedIn
         adminHelper.orderList().then((orderList)=>{
-           
+           console.log(orderList);
             res.render('admin/orders',{layout,status,orderList})
         })
     },
@@ -195,9 +196,9 @@ module.exports = {
 
     changeStatus:(req,res)=>{
         let status = req.session.adminLoggedIn
-      
-        adminHelper.orderStatusChange(req.params.id,req.body.status).then((response)=>{
-            res.redirect('/admin/orders')
+      console.log(req.body);
+        adminHelper.orderStatusChange(req.body.id,req.body.status).then((response)=>{
+            res.json(response)
         })
     }
 

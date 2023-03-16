@@ -81,7 +81,7 @@
                        
                    
                        
-                        <a href="/admin/delete-product/<%= product._id %>" class="btn btn-sm font-sm btn-light rounded" onclick="return confirm('Are you sure to delete <%= product.title %> ?' )">
+                        <a href="" class="btn btn-sm font-sm btn-light rounded" onclick="deletePrdouct('<%= product._id %>')">
                             <i class="material-icons md-delete_forever"></i>Delete
                         </a>
                     </div>
@@ -97,3 +97,22 @@
     <% } %>
     
 </section> 
+
+<script>
+    function deletePrdouct(prodId){
+        $.ajax({
+            url:'/admin/product',
+            method:'delete',
+            data:{
+                id:prodId
+            },
+            beforeSend:function(){
+                return confirm('Please confirm to delete')
+            },
+            success:(resolve)=>{
+                location.reload()
+            }
+            
+        })
+    }
+</script>
