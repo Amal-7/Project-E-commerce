@@ -42,7 +42,7 @@
                                 <tr class="text-center ">
                                   
                                     
-                                    <td><b><%= orders.date.getDate() %>-<%= (orders.date.getMonth())+1 %>-<%= orders.date.getFullYear() %></b></td>
+                                    <td><b><%= orders.date.toDateString() %></b></td>
                                     <td><%= orders.orderID %></td>
                                     <!-- <td><%= orders.deliveryDetails.mobile %></td> -->
                                     <td>Rs.<%= orders.totalAmount %></td>

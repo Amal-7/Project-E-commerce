@@ -122,16 +122,21 @@
                                     </tr>
 
                                     <tr class="summary-total">
-                                        
                                         <td><span id="cartTotal"><b> Total Order Price:</b>  <%= orderData[0].totalAmount %></span></td>
                                         <td>&nbsp;</td>
                                     </tr><!-- End .summary-total -->
+                                    <% if(orderData[0].discount >0) { %>
+                                    <tr class="summary-total">
+                                        <td><span id=""><b> Discount:</b>  <%= orderData[0].discount %></span></td>
+                                        <td>&nbsp;</td>
+                                    </tr><!-- End .summary-total -->
+                                    <% } %>
 
                                    <% if (orderData[0].status == 'Cancelled') { %>
                                     <tr  class="summary-total">
                                         <td>
                                          <div class="col-lg-2 col-sm-2 col-4 col-action ">
-                                             <a href="" class="btn btn-sm font-sm text-white btn-danger rounded disabled" onclick="return confirm('Are you sure you want to cancel this order' )">
+                                             <a href="" class="btn btn-sm font-sm text-white btn-danger rounded disabled" >
                                                  Order Cancelled
                                              </a>
                                          </div>
@@ -139,6 +144,48 @@
                                         </td>
                                         <td>&nbsp;</td>
                                      </tr><!-- End .summary-total -->
+                                     <% }else if(orderData[0].status ==='Delivered') { %>
+                                        <tr  class="summary-total">
+                                            <td>
+                                             <div class="col-lg-2 col-sm-2 col-4 col-action ">
+                                                 <a href="" class="btn btn-sm font-sm text-white btn-success rounded disabled" >
+                                                     Order Delivered
+                                                 </a>
+                                             </div>
+                                           
+                                            </td>
+                                            <td>&nbsp;</td>
+                                         </tr><!-- End .summary-total -->
+
+
+                                         <% if(locals.days <=7 ) { %>
+                                            <tr  class="summary-total">
+                                                <td>
+                                                 <div class="col-lg-2 col-sm-2 col-4 col-action ">
+                                                     <a href="/return-order/<%= orderData[0]._id %>" class="btn btn-sm font-sm text-white btn-secondary rounded" onclick="return confirm('Are you sure you want to return this order' )">
+                                                         Return
+                                                     </a>
+                                                 </div>
+                                               
+                                                </td>
+                                                <td>&nbsp;</td>
+                                             </tr><!-- End .summary-total -->
+                                             <% } %>
+                                         <% }else if(orderData[0].status ==='Returned') { %>
+                                            <tr  class="summary-total">
+                                                <td>
+                                                 <div class="col-lg-2 col-sm-2 col-4 col-action ">
+                                                     <a href="" class="btn btn-sm font-sm text-white btn-secondary rounded disabled" >
+                                                         Order Returned
+                                                     </a>
+                                                 </div>
+                                               
+                                                </td>
+                                                <td>&nbsp;</td>
+                                             </tr><!-- End .summary-total -->
+
+
+                                           
 
                                    <% } else { %>
 
@@ -153,6 +200,8 @@
                                        </td>
                                        <td>&nbsp;</td>
                                     </tr><!-- End .summary-total -->
+
+                                  
 
                                    <% } %>
 

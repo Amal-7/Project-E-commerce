@@ -6,12 +6,18 @@ var logger = require('morgan');
 var expressLayouts = require('express-ejs-Layouts');
 var db = require('./Model/connection');
 var session = require('express-session');
+let echarts =require('echarts')
+
+
+
 
 
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
 
 var app = express();
+
+
 
 // view engine setup
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,6 +39,7 @@ app.use(function nocache(req, res, next) {
 })
 
 app.use(express.urlencoded({ extended: false }));
+
 app.use(cookieParser());
 app.use(session({secret:'key',cookie:{maxAge:1200000}}));
 

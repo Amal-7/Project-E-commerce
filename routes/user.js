@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 const {home,loginPage,userLogin,userSignup,userLogout,userProfile,editProfile,logOtp,numVerify,otpVerify,
     forgotPassword,numVerifyReset,resetOtpVerify,resetPassword,product,
-    products,addToCart,cart,changeProdQty,cartItemDlt,checkOut,placeOrder,myOrders,orderDetails,orderCancel,addAddress,newAddress,changeAddress,changeAddressTo} = require('../controller/userController');
+    products,addToCart,cart,changeProdQty,cartItemDlt,checkOut,placeOrder,myOrders,orderDetails,orderReturn,orderCancel,addAddress,newAddress,changeAddress,
+    changeAddressTo,paypalSucces,applyCoupon,getMenProducts,getWomenProducts,searchProduct, verifyPayment,verifyRazorpay,razorpaySuccess} = require('../controller/userController');
 const {user} = require('../controller/authentication');
 
 
@@ -67,12 +68,22 @@ router.route('/checkout')
     .get(user,checkOut)
     .post(user,placeOrder);
 
+ /*razorpay order confirmation */ 
+ router.post('/verifyRazorpay',verifyRazorpay)
+
+/* order confirmation Paypal*/ 
+router.get('/razor-success',razorpaySuccess)
+router.get('/success',user,paypalSucces)
+
 /* order details*/ 
 router.get('/my-orders',user,myOrders);
 router.get('/order-details/:id',user,orderDetails);
 
 /*cancel order*/ 
 router.get('/cancel-order/:id',user,orderCancel);
+
+/*Return order*/ 
+router.get('/return-order/:id',user,orderReturn);
 
 /* Add new address*/ 
 router.route('/new-address')
@@ -82,6 +93,24 @@ router.route('/new-address')
 /* changing default address*/ 
 router.get('/change-address',user,changeAddress)
 router.get('/change-address-to/:id',user,changeAddressTo)
+
+
+/* Apply coupon */
+
+router.post('/applyCoupon',user,applyCoupon)
+
+/* Men Products*/ 
+router.get('/men',getMenProducts)
+
+/* Women Products*/ 
+router.get('/women',getWomenProducts)
+
+/* Search Product*/
+
+router.get('/search',searchProduct)
+
+
+
 
 
 

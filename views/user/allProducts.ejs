@@ -55,9 +55,33 @@
         </div><!-- .End .tab-pane -->
     </div><!-- End .tab-content -->
 
-    <div class="more-container text-center mt-2">
+    <!--Pagination -->
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+
+         
+          <% pages.forEach(page=>{ %>
+        
+          <li class="page-item" ><a class="page-link"  href="/products/?page=<%=page %>" aria-label="<%= page %>"><%= page %></a></li>
+          
+         <% }) %>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+      </ul>
+      </nav>>
+
+    <!-- <div class="more-container text-center mt-2">
         <a href="#" class="btn btn-outline-dark-3 btn-more"><span>Load more</span><i class="icon-long-arrow-right"></i></a>
-    </div><!-- End .more-container -->
+    </div> -->
 
     <hr class="mt-0 mb-6">
     

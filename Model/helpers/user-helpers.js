@@ -1,11 +1,13 @@
 var db = require('../connection')
-var {USERCOLLECTION,PRODUCTCOLLECTION,CARTCOLLECTION,ORDERCOLLECTION,PRODUCTCATEGORY} = require('../userCollection')
+var {USERCOLLECTION,PRODUCTCOLLECTION,CARTCOLLECTION,ORDERCOLLECTION,PRODUCTCATEGORY,COUPONCOLLECTION} = require('../userCollection')
 var bcrypt = require('bcrypt')
 const { promiseImpl } = require('ejs')
 const { ObjectId } = require('mongodb')
 const { product } = require('../../controller/userController')
 const { response } = require('../../app')
 const { user } = require('../../controller/authentication')
+const userCollection = require('../userCollection')
+
 
 
 module.exports = {
@@ -19,7 +21,9 @@ module.exports = {
                 resolve(regUser)
             }
             else {
+                
                 userData.isActive= true;
+                userData.address =[];
                 userData.password = await bcrypt.hash(userData.password, 10)
                await db.get().collection(USERCOLLECTION).insertOne(userData)
 
@@ -120,10 +124,19 @@ resetPassword:(userId,data)=>{
     
 
 }
+,
+getUser:(userId)=>{
+    console.log(userId,'rfdfsgfs');
+    return new Promise(async(resolve,reject)=>{
+    let user =  await db.get().collection(USERCOLLECTION).findOne({_id:ObjectId(userId)})
+       
+        resolve(user)
+    })
+}
 
 ,
 editProfile:(data,userId)=>{
-    console.log(data);
+    console.log(data,'for editing');
     return new Promise(async(resolve,reject)=>{
         let user =await db.get().collection(USERCOLLECTION).findOne({_id:ObjectId(userId)})
         console.log('user=',user);
@@ -457,7 +470,7 @@ cartProductList:(userId)=>{
     })
 },
 
-placeOrder:(order,userId,total,products)=>{
+placeOrder:(order,userId,total,products,user,discount)=>{
     return new Promise(async(resolve,reject)=>{
         
         let status = order['payment-method']==='COD'?'placed':'pending';
@@ -482,23 +495,62 @@ placeOrder:(order,userId,total,products)=>{
             paymentMethod :order['payment-method'],
             products:products,
             status:status,
-            date:new Date()
+            date:new Date(),
+            discount:discount
         }
         db.get().collection(ORDERCOLLECTION).insertOne(orderObj).then((response)=>{
              db.get().collection(CARTCOLLECTION).deleteOne({user:ObjectId(userId)})
+             if(user.address.length ==0){
+                let newAddress = {
+                    addressId: Math.round(Math.random()*1E9),
+                    status:"default",
+                    fname:order.fname,
+                    lname:order.lname,
+                    mobile:order.mobile,
+                    address:order.address,
+                    town:order.town,
+                    district:order.district,
+                    state:order.state,
+                    country:order.country,
+                    email:order.email,
+                    pincode:order.pincode,
+                    company:order.company,
+                    orderNotes:order['order-notes']
+
+                }
+                db.get().collection(USERCOLLECTION).updateOne({_id:ObjectId(userId)},{
+                    $push:{
+                        address:newAddress
+                    }
+                })
+             }
             db.get().collection(ORDERCOLLECTION).findOne({_id:ObjectId(response.insertedId)}).then((orderID)=>{
            
                 resolve(orderID)
+                console.log(orderID);
              })
         })
        
         
     })
 },
-
+paymentStatusChange:(orderID,userID)=>{
+    
+    return new Promise(async(resolve,reject)=>{
+        db.get().collection(ORDERCOLLECTION).updateOne({orderID:orderID},{
+            $set:{
+                status:'placed',
+            }
+        }).then((response)=>{
+           
+            resolve(response)
+        })
+    })
+}
+,
 orders:(userId)=>{
     return new Promise(async(resolve,reject)=>{
-       let data = await db.get().collection(ORDERCOLLECTION).find({user:ObjectId(userId)}).sort({'date':-1}).toArray()
+       let data = await db.get().collection(ORDERCOLLECTION).find({$and:[{user:ObjectId(userId)},{status:{$nin:['pending']}}]}).sort({'date':-1}).toArray()
       
      
        
@@ -528,8 +580,9 @@ orderDetails:(orderID)=>{
                 quantity:'$products.quantity',
                 deliveryDetails:'$deliveryDetails',
                 status:'$status',
-                date:'$date'
-
+                date:'$date',
+                deliveredAt:'$deliveredAt',
+                discount:'$discount'
             }
         },
         {
@@ -550,6 +603,8 @@ orderDetails:(orderID)=>{
                 deliveryDetails:1,
                 status:1,
                 date:1,
+                deliveredAt:1,
+                discount:1,
                 product:{$arrayElemAt:['$product',0]},
                
             }
@@ -564,6 +619,8 @@ orderDetails:(orderID)=>{
                 status:1,
                 date:1,
                 product:1,
+                deliveredAt:1,
+                discount:1,
                 subtotal:{
                     $sum:{$multiply:['$quantity','$product.price']}
                 }
@@ -582,6 +639,12 @@ orderDetails:(orderID)=>{
 cancelOrder:(orderID)=>{
     return new Promise(async (resolve,reject)=>{
       await  db.get().collection(ORDERCOLLECTION).updateOne({_id:ObjectId(orderID)},{$set:{status:'Cancelled'}})
+      resolve()
+    })
+},
+returnOrder:(orderID)=>{
+    return new Promise(async (resolve,reject)=>{
+      await  db.get().collection(ORDERCOLLECTION).updateOne({_id:ObjectId(orderID)},{$set:{status:'Returned'}})
       resolve()
     })
 },
@@ -668,6 +731,7 @@ toDefaultAddress:(userId,addId)=>{
     })
 },
 
+
 defaultAddress:(userId)=>{
     return new Promise(async(resolve,reject)=>{
         let address =  await  db.get().collection(USERCOLLECTION).aggregate([
@@ -719,7 +783,74 @@ defaultAddress:(userId)=>{
         
 
     })
+},
+
+
+
+totalOrderView:(pageNum,lmt)=>{
+    let skipNum=parseInt((pageNum-1)*lmt)
+    return new Promise(async(resolve,reject)=>{
+        let products=await db.get().collection(PRODUCTCOLLECTION).find().skip(skipNum).limit(lmt).toArray()
+        resolve(products)
+    })
+},
+
+couponCheck:(data,userId)=>{
+    data.total = parseInt(data.total)
+    return new Promise(async(resolve,reject)=>{
+       let coupon = await db.get().collection(COUPONCOLLECTION).findOne({code:data.code})
+       if(coupon){
+         let expiryDate = new Date(coupon.expiry)
+         let newDate = new Date()
+        let discountPrice = (data.total * coupon.percentage)/100  
+                if(expiryDate>newDate &&  data.total>coupon.minCartPrice ){
+                    if(coupon.maxDiscount<discountPrice) 
+                    discountPrice =  coupon.maxDiscount
+                    resolve(discountPrice)
+                }else{
+                    reject('Invalid Coupon')
+                }
+        }else{
+            reject('Invalid Coupon')
+        }
+        
+    })
+},
+
+search:(word)=>{
+    return new Promise(async(resolve,reject)=>{
+        let products = await db.get().collection(PRODUCTCOLLECTION).find({
+            '$or':[
+                {title:{$regex:word,'$options':'i'}},
+                {category:{$regex:word,'$options':'i'}}
+            ]
+        }).toArray()
+        console.log(products,'products');
+        if(products.length>0) 
+            resolve(products)
+        else
+            reject(`Sorry... No Matching results Found for '${word}'`)
+
+    })
+},
+verifyPaymentRazorpay:(orderID)=>{
+    return new Promise((resolve,reject)=>{
+        console.log(orderID,'orderid');
+        orderID = parseInt(orderID)
+        db.get().collection(ORDERCOLLECTION).updateOne({
+            orderID:orderID
+        },
+        {
+            $set:{
+                status:'placed'
+            }
+        }).then((response)=>{
+            resolve(orderID)
+        })
+    })
 }
+
+
 
 
 

@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 const {adminLogin,adminCheck,adminLogout,viewUser,userStatus,viewCategory,createCategory,editCategory,deleteCategory,
   categoryEdit,viewProducts,newProduct,addProduct,deleteProduct,
-  getProduct,editProduct,getOrders,orderDetails,changeStatus} = require('../controller/adminController');
+  getProduct,editProduct,getOrders,orderDetails,changeStatus,reports,addCoupon,addNewCoupon,
+  getCoupons,deleteCoupon,editCoupon,editCouponDetails} = require('../controller/adminController');
 const multer = require('multer');
 const {admin}= require('../controller/authentication');
 
@@ -71,6 +72,25 @@ router.get('/order-details/:id',admin,orderDetails);
 
 /* order status change*/ 
 router.post('/change-status',admin,changeStatus);
+
+// Admin Reports
+router.get('/reports',admin,reports)
+
+/* Coupon Management */
+
+router.route('/coupons')
+    .get(admin,getCoupons)
+    .delete(deleteCoupon)
+    .put(editCouponDetails)
+
+
+router.route('/addCoupon')
+    .get(admin,addCoupon)
+    .post(addNewCoupon)
+
+/* Coupon Edit */
+
+router.get('/coupons/:id',admin,editCoupon)
 
 
 

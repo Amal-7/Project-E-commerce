@@ -33,7 +33,7 @@
                             <td><b><%= order.deliveryDetails.fname %> <%= order.deliveryDetails.lname %></b></td>
                             <td><%= order.totalAmount %></td>
                             <td><span class="badge rounded-pill alert-warning"><%= order.status %></span></td>
-                            <td><%= order.date.getDate() %>.<%= (order.date.getMonth()+1) %>.<%= order.date.getFullYear() %></td>
+                            <td><%= order.date.toDateString()%></td>
                             <td class="text-end">
                                 <a href="/admin/order-details/<%= order._id %>" class="btn btn-md rounded font-sm">Detail</a>
                                 <!-- <div class="dropdown">

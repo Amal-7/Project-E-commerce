@@ -109,14 +109,14 @@
                                           </span></td>
                                             
                                             <td>
-                                                <a href="/admin/user-status/<%= user._id %>" onclick="return confirm('Are you sure to Block  <%= user.name %> ?' )" class="btn btn-danger">block</a>
+                                                <a href="/admin/user-status/<%= user._id %>" onclick="return confirm('Are you sure to Block  <%= user.name %> ?' )" class="btn-sm btn-danger text-decoration-none"> block </a>
                                               </td>
                                           <% } else { %>
                                             <td><span class="text-dark  rounded-pill alert-danger" >
                                                 Blocked
                                               </span></td>
                                             <td>
-                                                <a href="/admin/user-status/<%= user._id %>" onclick="return confirm('Are you sure to Unblock <%= user.name %> ?' )" class="btn btn-primary" >Unblock</a>                         
+                                                <a href="/admin/user-status/<%= user._id %>" onclick="return confirm('Are you sure to Unblock <%= user.name %> ?' )" class="btn-sm btn-primary text-decoration-none" >Unblock</a>                         
 
                                             </td>
                                           <% } %>

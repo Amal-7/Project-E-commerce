@@ -18,7 +18,7 @@
         <div class="checkout">
             <div class="container">
                 <!-- checkout-discount -->
-             <!-- <div class="d-flex">
+                <!-- <div class="d-flex">
                 <div class="">
                     
                         
@@ -40,72 +40,85 @@
                     <div class="row">
                         <div class="col-lg-9">
                             <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
-                            
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label>First Name *</label>
-                                        <input type="text" class="form-control" value="<%= address.fname %>" name="fname" required>
-                                    </div><!-- End .col-sm-6 -->
-                                    <div class="col-sm-6">
-                                        <label>Last Name *</label>
-                                        <input type="text" class="form-control" name="lname" value="<%= address.lname %>" required>
-                                    </div><!-- End .col-sm-6 -->
-                                </div><!-- End .row -->
 
-                                <label>Company Name (Optional)</label>
-                                <input type="text" class="form-control" name="company" value="<%= address.company %>">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>First Name *</label>
+                                    <input type="text" class="form-control" value="<%= locals.address.fname %>"
+                                        name="fname" required>
+                                </div><!-- End .col-sm-6 -->
+                                <div class="col-sm-6">
+                                    <label>Last Name *</label>
+                                    <input type="text" class="form-control" name="lname"
+                                        value="<%= locals.address.lname %>" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
 
-                                <label>Country *</label>
-                                <input type="text" class="form-control" name="country" value="<%= address.country %>" required>
+                            <label>Company Name (Optional)</label>
+                            <input type="text" class="form-control" name="company"
+                                value="<%= locals.address.company %>">
 
-                                <label>Street address *</label>
-                                <input type="text" class="form-control" name="address" placeholder="House number/name and Street name" value="<%= address.address %>" required>
-                                
-                                <label>District *</label>
-                                <input type="text" class="form-control" name="district" value="<%= address.district %>"  required>
-                                
+                            <label>Country *</label>
+                            <input type="text" class="form-control" name="country" value="<%= locals.address.country %>"
+                                required>
 
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label>Town / City *</label>
-                                        <input type="text" class="form-control" value="<%= address.town %>" name="town" required>
-                                    </div><!-- End .col-sm-6 -->
+                            <label>Street address *</label>
+                            <input type="text" class="form-control" name="address"
+                                placeholder="House number/name and Street name" value="<%= locals.address.address %>"
+                                required>
 
-                                    <div class="col-sm-6">
-                                        <label>State  *</label>
-                                        <input type="text" class="form-control" name="state" value="<%= address.state %>" required>
-                                    </div><!-- End .col-sm-6 -->
-                                </div><!-- End .row -->
+                            <label>District *</label>
+                            <input type="text" class="form-control" name="district"
+                                value="<%= locals.address.district %>" required>
 
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label>Postcode / ZIP *</label>
-                                        <input type="text" class="form-control" name="pincode" value="<%= address.pincode %>" required>
-                                    </div><!-- End .col-sm-6 -->
 
-                                    <div class="col-sm-6">
-                                        <label>Phone *</label>
-                                        <input type="tel" class="form-control" name="mobile" value="<%= address.mobile %>" required>
-                                    </div><!-- End .col-sm-6 -->
-                                </div><!-- End .row -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Town / City *</label>
+                                    <input type="text" class="form-control" value="<%= locals.address.town %>"
+                                        name="town" required>
+                                </div><!-- End .col-sm-6 -->
 
-                                <label>Email address *</label>
-                                <input type="email" class="form-control" name="email" value="<%= address.email %>" required>
+                                <div class="col-sm-6">
+                                    <label>State *</label>
+                                    <input type="text" class="form-control" name="state"
+                                        value="<%= locals.address.state %>" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
 
-                                <!-- <div class="custom-control custom-checkbox">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Postcode / ZIP *</label>
+                                    <input type="text" class="form-control" name="pincode"
+                                        value="<%= locals.address.pincode %>" required>
+                                </div><!-- End .col-sm-6 -->
+
+                                <div class="col-sm-6">
+                                    <label>Phone *</label>
+                                    <input type="tel" class="form-control" name="mobile"
+                                        value="<%= locals.address.mobile %>" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
+
+                            <label>Email address *</label>
+                            <input type="email" class="form-control" name="email" value="<%= locals.address.email %>"
+                                required>
+
+                            <!-- <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="checkout-create-acc">
                                     <label class="custom-control-label" for="checkout-create-acc">Create an account?</label>
                                 </div> -->
 
-                                <!-- <div class="custom-control custom-checkbox">
+                            <!-- <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="checkout-diff-address">
                                     <label class="custom-control-label" for="checkout-diff-address">Ship to a different address?</label>
                                 </div> -->
 
-                                <label>Order notes (optional)</label>
-                                <textarea class="form-control" cols="30" rows="4" name="order-notes" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+                            <label>Order notes (optional)</label>
+                            <textarea class="form-control" cols="30" rows="4" name="order-notes"
+                                placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
                         </div><!-- End .col-lg-9 -->
-                        <aside class="col-lg-3">
+                        <aside class="col-lg-3 d-flex">
                             <div class="summary">
                                 <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
 
@@ -119,32 +132,62 @@
 
                                     <tbody>
                                         <% for (var productDetails of cartItems) { %>
-                                        <tr>
-                                            <td><a href="#"><%= productDetails.product.title %></a></td>
-                                            <td><%= productDetails.total %></td>
-                                        </tr>
-                                        <% } %>
+                                            <tr>
+                                                <td><a href="#">
+                                                        <%= productDetails.product.title %>
+                                                    </a></td>
+                                                <td>
+                                                    <%= productDetails.total %>
+                                                </td>
+                                            </tr>
+                                            <% } %>
 
-                                        <tr class="summary-shipping-estimate">
-                                            <td> <a href="/new-address"><b>Add new address</b></a></td>
-                                            <td>&nbsp;</td>
-                                        </tr>
+                                                <tr class="summary-shipping-estimate">
+                                                    <td> <a href="/new-address"><b>Add new address</b></a></td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
 
-                                        <tr class="summary-shipping-estimate">
-                                            <td> <a href="/change-address"><b>Change Address</b></a></td>
-                                            <td>&nbsp;</td>
-                                        </tr>
+                                                <tr class="summary-shipping-estimate">
+                                                    <td> <a href="/change-address"><b>Change Address</b></a></td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
 
-                                        <tr>
-                                            <td>Shipping:</td>
-                                            <td>Free shipping</td>
-                                        </tr>
-                                        <tr class="summary-total">
-                                            <td>Total:</td>
-                                            <td><%= cartItems.cartPrice %></td>
-                                        </tr><!-- End .summary-total -->
+                                                <tr>
+                                                    <td>Shipping:</td>
+                                                    <td>Free shipping</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td> <input type="text" id="coupon-code" name="code" class="h-50"
+                                                            placeholder="Coupon code"> </td>
+                                                    <td> <input type="button" id="btn" class="text-white h-50 border-0"
+                                                            style=" background-color: #da0b38;" value="Apply Coupon"
+                                                            onclick="applyCoupon('<%= cartItems.cartPrice %>')"></td>
+                                                    <input type="text" class="d-none" id="discount" name="discount">
+
+
+                                                </tr>
+                                                <td class="h-50 text-left">
+                                                    <span class="text-danger" id="coupon-error"></span>
+                                                    <span class="text-success" id="coupon-success"></span>
+                                                </td>
+                                                <tr class="summary-total">
+                                                    <td>Total:</td>
+                                                    <td><span id="oldTotal">
+                                                            <%= cartItems.cartPrice %>
+                                                        </span></td>
+
+                                                </tr><!-- End .summary-total -->
+                                                <tr id="newTotal-row" class="summary-total d-none ">
+                                                    <td>New Total:</td>
+                                                    <td><span id="newTotal">0000</span></td>
+                                                </tr><!-- End .summary-total -->
                                     </tbody>
                                 </table><!-- End .table table-summary -->
+
+
+
+
 
                                 <div class="accordion-summary" id="accordion-payment">
                                     <!-- <div class="card">
@@ -180,10 +223,11 @@
                                     <div class="card pb-1">
                                         <div class="card-header" id="heading-3">
                                             <h2 class="card-title">
-                                                <input class="form-check-input" checked="" value="COD"  name="payment-method" type="radio">
-                                                   
-                                                 <span class="form-check-label ml-2">  Cash on delivery </span>
-                                               
+                                                <input class="form-check-input" id="cod" checked="" value="COD"
+                                                    name="payment-method" type="radio">
+
+                                                <span class="form-check-label ml-2"> Cash on delivery </span>
+
                                             </h2>
                                         </div>
                                         <!-- <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
@@ -195,22 +239,41 @@
                                     <div class="card pb-2">
                                         <div class="card-header" id="heading-4">
                                             <h2 class="card-title">
-                                                <input class="form-check-input "  value="paypal"  name="payment-method"type="radio">
-                                                   
-                                                 <span class="form-check-label ml-2"> PayPal</span>
-                                                <!-- <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                                                <input class="form-check-input " value="paypal" id="paypal-inputRadio"
+                                                    name="payment-method" type="radio">
+
+                                                <span class="form-check-label ml-2 "> PayPal</span>
+
+
+                                        </div>
+
+                                        <div class="card pt-1">
+                                            <div class="card-header" id="heading-4">
+                                                <h2 class="card-title">
+                                                    <input class="form-check-input " value="razorpay" id="razorpay-inputRadio"
+                                                        name="payment-method" type="radio">
+    
+                                                    <span class="form-check-label ml-2 "> Razorpay</span>
+    
+    
+                                            </div>
+
+                                        <!-- <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
                                                      <small class="float-right paypal-link">What is PayPal?</small>
                                                 </a> -->
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-                                            <div class="card-body">
-                                                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
+                                        </h2>
+                                    </div><!-- End .card-header -->
 
-                                    <!-- <div class="card">
+                                    <div id="collapse-4" class="collapse" aria-labelledby="heading-4"
+                                        data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper
+                                            suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <!-- <div class="card">
                                         <div class="card-header" id="heading-5">
                                             <h2 class="card-title">
                                                 <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
@@ -226,7 +289,8 @@
                                     </div>
                                 </div> -->
 
-                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                <button id="place-order" type="submit"
+                                    class="btn btn-outline-primary-2 btn-order btn-block">
                                     <span class="btn-text">Continue</span>
                                     <span class="btn-hover-text">Place Order</span>
                                 </button>
@@ -238,3 +302,50 @@
         </div><!-- End .checkout -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
+
+<script>
+    //     $('#paypal-inputRadio').click(function() {
+    //   $('#paypal-div').addClass('d-block')
+    //   $('#place-order').addClass('d-none')
+    // });
+
+    // $('#cod').click(function() {
+    //   $('#paypal-div').removeClass('d-block')
+    //   $('#place-order').removeClass('d-none')
+    // });
+
+    function applyCoupon(totalAmount) {
+        const couponCode = document.getElementById('coupon-code').value
+
+        $.ajax({
+            url: '/applyCoupon',
+            method: 'post',
+            data: {
+                'code': couponCode,
+                'total': totalAmount
+            },
+            success: (response) => {
+                if (response.status) {
+                    document.getElementById('newTotal').innerHTML = parseInt(totalAmount) - parseInt(response.discount)
+                    $('#oldTotal').addClass('text-decoration-line-through')
+                    $('#newTotal-row').removeClass('d-none')
+                    $('#oldTotal').css('text-decoration', 'Line-Through')
+                    $('#discount').val(`${response.discount}`)
+                    document.getElementById('coupon-error').innerHTML = ''
+                    document.getElementById('coupon-success').innerHTML = `You Saved ${response.discount}`
+
+                } else {
+                    document.getElementById('coupon-error').innerHTML = response.errorMsg
+                    document.getElementById('coupon-success').innerHTML = ''
+                }
+            }
+        })
+    }
+
+
+
+
+
+
+
+</script>

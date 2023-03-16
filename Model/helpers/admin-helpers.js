@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb')
 var db = require('../connection')
-var {ADMINCOLLECTION,USERCOLLECTION,PRODUCTCOLLECTION,CARTCOLLECTION,ORDERCOLLECTION,PRODUCTCATEGORY}= require('../userCollection')
+var {ADMINCOLLECTION,USERCOLLECTION,PRODUCTCOLLECTION,CARTCOLLECTION,ORDERCOLLECTION,PRODUCTCATEGORY,COUPONCOLLECTION}= require('../userCollection')
 // var objectId = require('mongodb').ObjectId
 
 module.exports = {
@@ -24,6 +24,34 @@ module.exports = {
         })
         
     },
+
+    dashboard:()=>{
+        return new Promise(async(resolve,reject)=>{
+            
+         let order = await  db.get().collection(ORDERCOLLECTION).aggregate([
+            {$match:{status:'Delivered'}},
+           
+            {
+                $group:{
+                    _id:null,
+                    totalAmount:{
+                        $sum:'$totalAmount'
+                    },
+                    count:{$sum:1}
+                   
+            }
+        },
+        
+      
+
+         ]).toArray()
+
+            console.log('sum',order);
+            resolve(order[0])
+        })
+
+    },
+
     getUsers:()=>{
         return new Promise(async (resolve,reject)=>{
             let users =await db.get().collection(USERCOLLECTION).find().toArray()
@@ -240,6 +268,14 @@ module.exports = {
                     status:status
                 }
             }).then((response)=>{
+                if(status==='Delivered'){
+                    db.get().collection(ORDERCOLLECTION).updateOne({_id:ObjectId(orderID)},
+                            {
+                                $set:{
+                                    deliveredAt:new Date()
+                                }
+                            })
+                }
                 response.status  = true
                 response.newStatus = status
                 
@@ -247,8 +283,180 @@ module.exports = {
             })
 
         })
-    }
-        
+    },
 
+    monthlyEarning:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let currentMonth = new Date().getMonth()+1;
+            console.log('current month',currentMonth);
+           let monthRevenue = await db.get().collection(ORDERCOLLECTION).aggregate([
+                {
+                    $match:{
+                        status:'Delivered'
+                    }
+                },
+                {
+                    $project:{
+                        month:{$month:'$date'},
+                        totalAmount:1
+                    
+                    }
+
+                },
+                {
+                    $match:{
+                        month:currentMonth
+                    }
+                },
+                {
+                    $group:{
+                        _id:null,
+                        totalAmount:{$sum:'$totalAmount'}
+                    }
+                }
+               
+                
+            ]).toArray()
+            console.log(monthRevenue);
+            if(monthRevenue.length<=0) 
+                resolve(0)
+            else
+                resolve(monthRevenue[0].totalAmount)
+
+           
+        })
+    },
+
+    monthlyOrders:()=>{
+        return new Promise(async(resolve,reject)=>{
+            
+            
+           let orders = await db.get().collection(ORDERCOLLECTION).aggregate([
+                {
+                    $match:{
+                        status:'Delivered'
+                    }
+                },
+                {
+                    $project:{
+                        month:{$month:'$date'},
+                       
+                    
+                    }
+
+                },
+               
+                {
+                    $group:{
+                        _id:'$month',                      
+                        count:{$sum:1}
+                    }
+                },
+               
+               
+                
+            ]).toArray()
+            console.log('orderss====',orders)
+            resolve(orders)
+
+           
+        })
+    },
+
+    orderPaymentDetails:()=>{
+        return new Promise(async(resolve,reject)=>{
+        let orderData =await    db.get().collection(ORDERCOLLECTION).aggregate([
+                {
+                    $group:{
+                        _id:'$paymentMethod',
+                        count:{$sum:1}
+                    }
+                }
+            ]).toArray()
+            resolve(orderData)
+        })
+    },
+
+    orderStatusDetails:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let orderStatus = await db.get().collection(ORDERCOLLECTION).aggregate([
+                {
+                    $group:{
+                        _id:'$status',
+                        count:{$sum:1}
+                    }
+                }
+            ]).toArray()
+            console.log('orderstatus==',orderStatus);
+            resolve(orderStatus)
+        })
+    },
+
+
+    reportList:()=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(ORDERCOLLECTION).find({status:'Delivered'}).sort({'date':-1}).toArray().then((response)=>{
+                
+                resolve(response)
+            })
+        })
+        
+    },
+
+    addCoupon:(data)=>{
+        return new Promise((resolve,reject)=>{
+            data.maxDiscount = parseInt(data.maxDiscount)
+            data.percentage = parseInt(data.percentage)
+            data.minCartPrice =parseInt(data.minCartPrice)
+            db.get().collection(COUPONCOLLECTION).insertOne(data).then(()=>{
+                resolve()
+            })
+        })
+    },
+   
+    couponList:()=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(COUPONCOLLECTION).find().toArray().then((response)=>{
+                  resolve(response)
+                
+            })
+        })
+    },
+
+    dltCoupon:(id)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(COUPONCOLLECTION).deleteOne({_id:ObjectId(id)}).then((response)=>{
+                resolve()
+            })
+        })
+    },
+
+    getCouponDetails:(id)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(COUPONCOLLECTION).findOne({_id:ObjectId(id)}).then((response)=>{
+                console.log(response,'response');
+                resolve(response)
+            })
+        })
+    },
+
+    editCoupon:(data)=>{
+        return new Promise((resolve,reject)=>{
+            
+            db.get().collection(COUPONCOLLECTION).updateOne({_id:ObjectId(data.id)},{
+                $set:{
+                    code:data.code,
+                    maxDiscount:parseInt(data.maxDiscount),
+                    percentage:parseInt(data.percentage),
+                    category:data.category,
+                    minCartPrice:parseInt(data.minCartPrice),
+                    expiry:data.expiry
+
+                }
+            }).then(()=>{
+                resolve()
+            })
+        })
+    }
     
 }

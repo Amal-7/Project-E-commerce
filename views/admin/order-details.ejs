@@ -190,7 +190,7 @@
                                     </label>
 
 
-                                    <% } else if(order[0].status=='Delivered' ) { %>
+                                    <% } else if(order[0].status=='Delivered' || order[0].status=='Returned') { %>
 
 
                                         <% } else if(order[0].status=='Cancelled' ) { %>
@@ -236,10 +236,18 @@
                                             <% } else if(order[0].status == 'Cancelled') { %>
                                                 <div class=" ">
                                                     <a href="" class="btn btn-sm font-sm text-white btn-danger rounded disabled"
-                                                        onclick="return confirm('Are you sure you want to cancel this order' )">
+                                                       >
                                                         Order Cancelled
                                                     </a>
                                                 </div>
+
+                                                <% } else if(order[0].status == 'Returned') { %>
+                                                    <div class=" ">
+                                                        <a href="" class="btn btn-sm font-sm text-white btn-danger rounded disabled"
+                                                           >
+                                                            Order Returned
+                                                        </a>
+                                                    </div>
                                                 
                                             <% } else { %>
                                                 <button class="btn btn-primary font-sm" type="submit"> Change Status </button>
